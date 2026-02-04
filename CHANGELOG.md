@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+#### Claude Code Skills
+
+- **Claude Code skill for document extraction**: Added `skills/kreuzberg/SKILL.md` with comprehensive instructions for using Kreuzberg with Claude Code, including multi-language examples (Python, Rust, Node.js, CLI), OCR configuration, batch processing, and common patterns
+
 ### Fixed
 
 #### MIME Type Detection

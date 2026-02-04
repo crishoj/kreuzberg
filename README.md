@@ -225,6 +225,17 @@ Extract comprehensive metadata from all supported formats: authors, titles, crea
 
 </details>
 
+## Claude Code Skills
+
+Kreuzberg includes [Claude Code](https://claude.com/claude-code) skills to help AI assistants work with the library effectively. Install the skill to get intelligent help with document extraction:
+
+```bash
+# Copy to your Claude Code skills directory
+cp -r skills/kreuzberg ~/.claude/skills/
+```
+
+See [skills/README.md](skills/README.md) for more details.
+
 ## Documentation
 
 - **[Installation Guide](https://docs.kreuzberg.dev/getting-started/installation/)** – Setup and dependencies
