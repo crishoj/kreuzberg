@@ -311,6 +311,7 @@ impl DocumentExtractor for PdfExtractor {
             images,
             djot_content: None,
             elements: None,
+            ocr_elements: None,
         })
     }
 

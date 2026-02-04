@@ -586,6 +586,7 @@ impl DocumentExtractor for OdtExtractor {
             images: None,
             djot_content: None,
             elements: None,
+            ocr_elements: None,
         })
     }
 
