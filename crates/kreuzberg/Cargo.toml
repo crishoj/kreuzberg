@@ -62,6 +62,7 @@ ocr = [
     "html",
 ]
 # PaddleOCR via ONNX Runtime (independent feature, NOT in 'full')
+# Requires 'ocr' feature for shared conversion utilities and table reconstruction
 paddle-ocr = [
     "dep:kreuzberg-paddle-ocr",
     "dep:sha2",
@@ -70,6 +71,7 @@ paddle-ocr = [
     "dep:tar",
     "html",
     "tokio-runtime",
+    "ocr",
 ]
 language-detection = ["dep:whatlang"]
 chunking = ["dep:text-splitter"]
@@ -242,9 +244,11 @@ pprof = { version = "0.15.0", features = ["flamegraph"], optional = true }
 # PaddleOCR via ONNX Runtime - not available on WASM (vendored from paddle-ocr-rs)
 kreuzberg-paddle-ocr = { path = "../kreuzberg-paddle-ocr", optional = true }
 # Use rustls on non-Windows platforms (Linux, macOS)
+# Blocking feature needed for model downloads
 reqwest = { workspace = true, default-features = false, features = [
     "json",
     "rustls",
+    "blocking",
 ], optional = true }
 # Use rustls-tls for fastembed on non-Windows platforms
 fastembed = { version = "5.8", default-features = false, features = [
@@ -258,9 +262,11 @@ ureq = { version = "3.1", default-features = false, features = ["rustls", "json"
 [target.'cfg(all(target_os = "windows", not(target_arch = "wasm32")))'.dependencies]
 # PaddleOCR via ONNX Runtime - not available on WASM (vendored from paddle-ocr-rs)
 kreuzberg-paddle-ocr = { path = "../kreuzberg-paddle-ocr", optional = true }
+# Blocking feature needed for model downloads
 reqwest = { workspace = true, default-features = false, features = [
     "json",
     "native-tls",
+    "blocking",
 ], optional = true }
 # Use native-tls for fastembed on Windows
 fastembed = { version = "5.8", default-features = false, features = [
