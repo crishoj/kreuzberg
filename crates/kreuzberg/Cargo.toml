@@ -61,7 +61,7 @@ ocr = [
     "dep:kamadak-exif",
     "html",
 ]
-# PaddleOCR via ONNX Runtime (independent feature, NOT in 'full')
+# PaddleOCR via ONNX Runtime
 # Requires 'ocr' feature for shared conversion utilities and table reconstruction
 paddle-ocr = [
     "dep:kreuzberg-paddle-ocr",
@@ -101,6 +101,7 @@ full = [
     "xml",
     "archives",
     "ocr",
+    "paddle-ocr",
     "language-detection",
     "chunking",
     "embeddings",
