@@ -29,6 +29,7 @@ tokio-runtime = ["dep:tokio"]
 
 pdf = ["dep:pdfium-render", "dep:lopdf", "dep:image"]
 static-pdfium = ["pdf"]
+pdfium-static-ffi = ["static-pdfium", "pdfium-render/static"]
 bundled-pdfium = ["pdf"]
 system-pdfium = ["pdf"]
 excel = ["dep:calamine", "dep:polars", "tokio-runtime"]

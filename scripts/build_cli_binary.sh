@@ -7,4 +7,10 @@ if [[ -z "$TARGET" ]]; then
   exit 1
 fi
 
-cargo build --release --target "$TARGET" --package kreuzberg-cli
+if [[ "$TARGET" == *"musl"* ]]; then
+  # musl: use static PDFium FFI (no dlopen) instead of bundled dynamic library
+  cargo build --release --target "$TARGET" --package kreuzberg-cli \
+    --no-default-features --features pdfium-static-ffi
+else
+  cargo build --release --target "$TARGET" --package kreuzberg-cli
+fi

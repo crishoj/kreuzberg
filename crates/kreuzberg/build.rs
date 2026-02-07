@@ -34,8 +34,15 @@ fn main() {
 
     match strategy {
         PdfiumLinkStrategy::DownloadStatic => {
-            let pdfium_dir = download_or_use_prebuilt(&target, &out_dir);
-            link_statically(&pdfium_dir, &target);
+            // When PDFIUM_STATIC_LIB_PATH is set, link_statically() uses it directly
+            // and doesn't need the downloaded pdfium directory at all.
+            if env::var("PDFIUM_STATIC_LIB_PATH").is_ok() {
+                // Pass a dummy path; link_statically() will use PDFIUM_STATIC_LIB_PATH and return early
+                link_statically(Path::new("."), &target);
+            } else {
+                let pdfium_dir = download_or_use_prebuilt(&target, &out_dir);
+                link_statically(&pdfium_dir, &target);
+            }
         }
         PdfiumLinkStrategy::Bundled => {
             let pdfium_dir = download_or_use_prebuilt(&target, &out_dir);
@@ -599,8 +606,13 @@ fn link_statically(pdfium_dir: &Path, target: &str) {
         println!("cargo:rustc-link-lib=static=pdfium");
 
         if target.contains("linux") {
-            println!("cargo:rustc-link-lib=dylib=pthread");
-            println!("cargo:rustc-link-lib=dylib=dl");
+            if target.contains("musl") {
+                println!("cargo:rustc-link-lib=pthread");
+                println!("cargo:rustc-link-lib=dl");
+            } else {
+                println!("cargo:rustc-link-lib=dylib=pthread");
+                println!("cargo:rustc-link-lib=dylib=dl");
+            }
         } else if target.contains("windows") {
             println!("cargo:rustc-link-lib=dylib=ws2_32");
             println!("cargo:rustc-link-lib=dylib=userenv");
@@ -660,8 +672,13 @@ fn link_statically(pdfium_dir: &Path, target: &str) {
     }
 
     if target.contains("linux") {
-        println!("cargo:rustc-link-lib=dylib=pthread");
-        println!("cargo:rustc-link-lib=dylib=dl");
+        if target.contains("musl") {
+            println!("cargo:rustc-link-lib=pthread");
+            println!("cargo:rustc-link-lib=dl");
+        } else {
+            println!("cargo:rustc-link-lib=dylib=pthread");
+            println!("cargo:rustc-link-lib=dylib=dl");
+        }
     } else if target.contains("windows") {
         println!("cargo:rustc-link-lib=dylib=ws2_32");
         println!("cargo:rustc-link-lib=dylib=userenv");

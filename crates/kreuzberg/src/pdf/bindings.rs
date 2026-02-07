@@ -87,7 +87,20 @@ fn extract_and_get_lib_dir() -> Result<Option<PathBuf>, String> {
 fn create_pdfium_bindings(lib_dir: &Option<PathBuf>) -> Result<Box<dyn PdfiumLibraryBindings>, String> {
     let _ = lib_dir;
 
-    #[cfg(all(feature = "pdf", feature = "bundled-pdfium", not(target_arch = "wasm32")))]
+    // When pdfium-static-ffi is enabled, PDFium is statically linked into the binary.
+    // Use direct FFI bindings (no dlopen) — required for musl static binaries.
+    #[cfg(all(feature = "pdfium-static-ffi", not(target_arch = "wasm32")))]
+    {
+        return Pdfium::bind_to_statically_linked_library()
+            .map_err(|e| format!("Failed to bind to statically linked Pdfium: {}", e));
+    }
+
+    #[cfg(all(
+        feature = "pdf",
+        feature = "bundled-pdfium",
+        not(feature = "pdfium-static-ffi"),
+        not(target_arch = "wasm32")
+    ))]
     {
         if let Some(dir) = lib_dir {
             return Pdfium::bind_to_library(Pdfium::pdfium_platform_library_name_at_path(dir))
@@ -96,7 +109,11 @@ fn create_pdfium_bindings(lib_dir: &Option<PathBuf>) -> Result<Box<dyn PdfiumLib
     }
 
     // For system library or WASM
-    Pdfium::bind_to_system_library().map_err(|e| format!("Failed to bind to system Pdfium library: {}", e))
+    #[cfg(not(feature = "pdfium-static-ffi"))]
+    {
+        Pdfium::bind_to_system_library()
+            .map_err(|e| format!("Failed to bind to system Pdfium library: {}", e))
+    }
 }
 
 /// Initialize the Pdfium singleton.

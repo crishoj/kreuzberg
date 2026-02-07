@@ -126,6 +126,7 @@ packages/python/kreuzberg/kreuzberg-cli
 
 # WASM build artifacts
 libpdfium.a
+pdfium-static/
 .wrangler/
 
 # Generated pkg-config files
